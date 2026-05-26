@@ -1,0 +1,55 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Secrets and keystores - tránh commit file cấu hình chứa JWT key hoặc khoá riêng
+# Ignore Spring Boot application config files that may contain JWT keys or other secrets
+**/src/**/resources/application*.yml
+**/src/**/resources/application*.yaml
+
+# Optional local override and environment files
+.env
+.env.local
+.env.*
+
+# Common secrets/credentials files
+secrets.properties
+credentials.properties
+application-secret.*
+
+# Keystores and private keys
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
