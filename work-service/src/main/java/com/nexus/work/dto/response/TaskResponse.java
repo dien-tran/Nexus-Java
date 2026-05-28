@@ -22,5 +22,5 @@ public class TaskResponse {
     LocalDate startDate;
     LocalDate dueDate;
     String status;
-    String note;
+    String priority;
 }
