@@ -21,13 +21,13 @@ Trong một quy trình làm việc hiện đại, người dùng thường phả
 
 Trang giới thiệu sản phẩm cho người dùng mới, trình bày định vị của Nexus Flow như một workspace tập trung cho công việc sáng tạo, nghiên cứu và quản lý nội dung. Người dùng có thể xem phần giới thiệu tính năng, demo AI Assistant và đi tới đăng nhập hoặc đăng ký.
 
-![alt text](image-9.png)
+![alt text](img/image-9.png)
 ### Authentication
 
 Giao diện đăng nhập và đăng ký tài khoản. Backend `identity-service` hỗ trợ tạo user, mã hóa mật khẩu, đăng nhập bằng email/password và cấp JWT. API Gateway cho phép public các endpoint đăng nhập, xác thực token và tạo user, các endpoint nghiệp vụ còn lại yêu cầu JWT hợp lệ.
 
-![alt text](image-1.png)
-![alt text](image-2.png)
+![alt text](img/image-1.png)
+![alt text](img/image-2.png)
 ### Focus Dashboard
 
 Dashboard là màn hình tổng quan sau khi đăng nhập:
@@ -37,7 +37,7 @@ Dashboard là màn hình tổng quan sau khi đăng nhập:
 - Weekly Productivity mô phỏng biểu đồ năng suất theo tuần.
 - AI Suggestion Panel đưa ra nhận định nhanh dựa trên danh sách task.
 - Quick task cho phép tạo nhanh nhiệm vụ mới từ thanh điều hướng.
-![alt text](image-3.png)
+![alt text](img/image-3.png)
 ### Creative Workspace
 
 Workspace là nơi quản lý các kế hoạch nội dung và mục tiêu dài hạn:
@@ -47,8 +47,8 @@ Workspace là nơi quản lý các kế hoạch nội dung và mục tiêu dài 
 - View Details & Tasks: mở chi tiết từng plan/roadmap và xem các task liên quan.
 - Update Details: chỉnh sửa thông tin kế hoạch hoặc mục tiêu.
 
-![alt text](image-4.png)
-![alt text](image-5.png)
+![alt text](img/image-4.png)
+![alt text](img/image-5.png)
 ### Task Boards
 
 Task Boards là bảng Kanban cho công việc hằng ngày:
@@ -61,7 +61,7 @@ Task Boards là bảng Kanban cho công việc hằng ngày:
 - Pin/unpin task để ưu tiên hiển thị ở khu vực quan trọng.
 - Hiển thị deadline, priority, assignee và mô tả ngắn.
 
-![alt text](image-6.png)
+![alt text](img/image-6.png)
 ### Calendar
 
 Calendar giúp nhìn công việc theo thời gian:
@@ -72,7 +72,7 @@ Calendar giúp nhìn công việc theo thời gian:
 - Hiển thị task một ngày hoặc task kéo dài nhiều ngày dựa trên `startDate` và `dueDate`.
 - Màu sắc task thay đổi theo category để dễ nhận diện.
 
-![alt text](image-7.png)
+![alt text](img/image-7.png)
 ### AI Assistant
 
 AI Assistant cung cấp giao diện chat toàn màn hình:
@@ -81,7 +81,7 @@ AI Assistant cung cấp giao diện chat toàn màn hình:
 - Nhận phản hồi dạng hội thoại.
 - Reset lịch sử chat.
 
-![alt text](image-8.png)
+![alt text](img/image-8.png)
 
 Frontend hiện có server Express/Vite hỗ trợ chế độ demo với dữ liệu in-memory và Gemini API. Backend cũng có `chat-service` FastAPI riêng, dùng LangGraph/OpenAI-compatible LLM để đọc dữ liệu work database và trả lời theo ngữ cảnh người dùng.
 
