@@ -41,6 +41,11 @@ build/
 .env
 .env.local
 .env.*
+chat-service/.venv/
+chat-service/__pycache__/
+chat-service/**/__pycache__/
+chat-service/.pytest_cache/
+!chat-service/.env.example
 
 # Common secrets/credentials files
 secrets.properties
