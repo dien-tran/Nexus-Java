@@ -20,7 +20,8 @@ Trong một quy trình làm việc hiện đại, người dùng thường phả
 ### Landing Page
 
 Trang giới thiệu sản phẩm cho người dùng mới, trình bày định vị của Nexus Flow như một workspace tập trung cho công việc sáng tạo, nghiên cứu và quản lý nội dung. Người dùng có thể xem phần giới thiệu tính năng, demo AI Assistant và đi tới đăng nhập hoặc đăng ký.
-![alt text](image.png)
+
+![alt text](image-9.png)
 ### Authentication
 
 Giao diện đăng nhập và đăng ký tài khoản. Backend `identity-service` hỗ trợ tạo user, mã hóa mật khẩu, đăng nhập bằng email/password và cấp JWT. API Gateway cho phép public các endpoint đăng nhập, xác thực token và tạo user, các endpoint nghiệp vụ còn lại yêu cầu JWT hợp lệ.
