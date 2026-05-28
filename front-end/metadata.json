@@ -1,0 +1,6 @@
+{
+  "name": "Creative Editorial Workspace",
+  "description": "An elegant, minimalist writing workspace and editorial asset tracking dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
