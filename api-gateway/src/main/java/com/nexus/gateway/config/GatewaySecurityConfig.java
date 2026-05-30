@@ -28,7 +28,7 @@ public class GatewaySecurityConfig {
                         // Chi co 3 business endpoint public. Tat ca route con lai qua Gateway deu can JWT.
                         .pathMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/auth/verify").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/users/create").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .pathMatchers("/actuator/health").permitAll()
                         .anyExchange().authenticated()
                 )

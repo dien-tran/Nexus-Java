@@ -36,18 +36,19 @@ Gateway expose API với prefix `/api`, ví dụ:
 ```text
 POST /api/auth/login
 POST /api/auth/verify
-POST /api/users/create
+POST /api/users
 GET  /api/plans
-POST /api/tasks/create/{planId}
+POST /api/tasks
 ```
 
 Gateway sẽ strip prefix `/api` trước khi route xuống service nội bộ:
 
 ```text
 /api/auth/login      -> identity-service /auth/login
-/api/users/create    -> identity-service /users/create
+/api/users           -> identity-service /users
 /api/plans           -> work-service /plans
 /api/tasks           -> work-service /tasks
+/api/dashboard       -> work-service /dashboard
 ```
 
 Chỉ có đúng 3 business endpoint public:
@@ -55,7 +56,7 @@ Chỉ có đúng 3 business endpoint public:
 ```text
 POST /api/auth/login
 POST /api/auth/verify
-POST /api/users/create
+POST /api/users
 ```
 
 Tất cả endpoint khác bắt buộc có JWT.
@@ -104,7 +105,7 @@ Sau khi tách microservices:
 Khi tạo user:
 
 ```text
-POST /api/users/create
+POST /api/users
 ```
 
 Kết quả:
@@ -128,7 +129,7 @@ Kết quả:
 Khi tạo plan:
 
 ```text
-POST /api/plans/create
+POST /api/plans
 Authorization: Bearer <token>
 ```
 
@@ -267,7 +268,7 @@ Chú ý: không gửi password qua Kafka.
 Khi gọi:
 
 ```text
-POST /api/users/create
+POST /api/users
 ```
 
 Luồng xử lý:
@@ -420,7 +421,7 @@ mvn test
 Tạo user:
 
 ```text
-POST http://localhost:8080/api/users/create
+POST http://localhost:8080/api/users
 ```
 
 Login:
@@ -432,7 +433,7 @@ POST http://localhost:8080/api/auth/login
 Tạo plan cần JWT:
 
 ```text
-POST http://localhost:8080/api/plans/create
+POST http://localhost:8080/api/plans
 Authorization: Bearer <token>
 ```
 
@@ -446,6 +447,6 @@ Authorization: Bearer <token>
 Tạo task cần JWT:
 
 ```text
-POST http://localhost:8080/api/tasks/create/{planId}
+POST http://localhost:8080/api/tasks
 Authorization: Bearer <token>
 ```

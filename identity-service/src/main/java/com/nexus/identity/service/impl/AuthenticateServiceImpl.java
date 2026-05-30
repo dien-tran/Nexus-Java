@@ -25,6 +25,8 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
 
+    @NonFinal
     @Value("${jwt.signer-key}")
     String signerKey;
 

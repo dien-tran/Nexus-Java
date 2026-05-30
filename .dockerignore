@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+img
+front-end/node_modules
+front-end/dist
+front-end/dev-server*.log
+chat-service/__pycache__
+**/__pycache__
+**/target
+**/.mvn/timing.properties

@@ -31,7 +31,7 @@ public class SecurityConfig {
                 // Service van tu bao ve chinh no khi chay local, khong chi phu thuoc vao Gateway.
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/verify").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/create").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .anyRequest().authenticated()
         );
