@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, BookOpen, PenTool } from 'lucide-react';
+import { createUser, loginUser, setStoredSession } from '../lib/api.js';
 
 interface AuthPagesProps {
   initialIsSignIn: boolean;
-  onSuccess: (username: string) => void;
+  onSuccess: (session: { id?: string; name: string; email: string }) => void;
   onBackToLanding: () => void;
 }
 
@@ -15,8 +16,9 @@ export default function AuthPages({ initialIsSignIn, onSuccess, onBackToLanding 
   const [confirmPassword, setConfirmPassword] = useState('password123');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -36,8 +38,28 @@ export default function AuthPages({ initialIsSignIn, onSuccess, onBackToLanding 
       }
     }
 
-    // Success Authentication Trigger
-    onSuccess(isSignIn ? (email.split('@')[0] || 'Julian') : username);
+    setIsSubmitting(true);
+    try {
+      const createdUser = isSignIn ? null : await createUser(username, email, password);
+      const auth = await loginUser(email, password);
+
+      if (!auth.authenticated || !auth.token) {
+        throw new Error('Authentication failed');
+      }
+
+      const session = {
+        id: createdUser?.id,
+        name: createdUser?.name || username || email.split('@')[0] || 'User',
+        email: createdUser?.email || email
+      };
+
+      setStoredSession(auth.token, session);
+      onSuccess(session);
+    } catch (error) {
+      setErrorMsg(error instanceof Error ? error.message : 'Authentication failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -145,9 +167,10 @@ export default function AuthPages({ initialIsSignIn, onSuccess, onBackToLanding 
               {/* Submit Sign In */}
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full py-2.5 bg-[#cc785c] hover:bg-primary-hover text-white text-sm font-semibold rounded-lg shadow-xs hover:shadow-sm transition-all focus:ring-3 focus:ring-primary/20 pt-2 cursor-pointer"
               >
-                Sign In
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
               </button>
             </form>
 
@@ -299,9 +322,10 @@ export default function AuthPages({ initialIsSignIn, onSuccess, onBackToLanding 
               {/* Action */}
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full py-2.5 bg-[#cc785c] hover:bg-primary-hover text-[#fff] text-xs font-semibold rounded-lg shadow-xs hover:shadow-sm transition-all focus:ring-3 focus:ring-primary/25 cursor-pointer"
               >
-                Create Account
+                {isSubmitting ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
 

@@ -5,7 +5,6 @@ import { Task, AppState } from '../types';
 interface CalendarViewProps {
   appState: AppState;
   onUpdateTaskStatus: (taskId: string, status: Task['status']) => void;
-  onAddTask: (taskData: Partial<Task>) => void;
   onNavigateToTab: (tabName: string) => void;
   onEditTask?: (task: Task) => void;
 }
@@ -127,7 +126,6 @@ export function getTaskDateRange(task: Task): { start: Date; end: Date } | null 
 export default function CalendarView({
   appState,
   onUpdateTaskStatus,
-  onAddTask,
   onNavigateToTab,
   onEditTask
 }: CalendarViewProps) {
@@ -235,30 +233,14 @@ export default function CalendarView({
     }
   };
 
-  // Task filtering & visual styles mapping
   const getTaskStyles = (task: Task) => {
-    const title = task.title.toLowerCase();
-    
-    if (title.includes('strategy')) {
-      return 'bg-[#008f7a] text-white border-[#008f7a]';
-    }
-    if (title.includes('anthology')) {
-      return 'bg-[#a25135] text-white border-[#a25135]';
-    }
-    if (title.includes('market')) {
-      return 'bg-[#005f56] text-white border-[#005f56]';
-    }
-    
-    // Category mapping fallback
-    switch (task.category.toUpperCase()) {
-      case 'EDITORIAL':
-        return 'bg-primary text-white border-primary';
-      case 'DESIGN':
+    switch (task.priority) {
+      case 'Urgent':
+        return 'bg-[#a25135] text-white border-[#a25135]';
+      case 'High':
         return 'bg-[#e8a55a] text-ink font-semibold border-[#e8a55a]';
-      case 'CONTENT':
-        return 'bg-[#005f56] text-white border-[#005f56]';
-      case 'ENGINEERING':
-        return 'bg-[#1d8372] text-white border-[#1d8372]';
+      case 'Medium':
+        return 'bg-primary text-white border-primary';
       default:
         return 'bg-surface-card text-ink border-border-hairline';
     }
@@ -291,9 +273,9 @@ export default function CalendarView({
       {/* Top Header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-hairline pb-4">
         <div>
-          <h2 className="font-serif text-3xl font-medium text-ink">Editorial Calendar</h2>
+          <h2 className="font-serif text-3xl font-medium text-ink">Task Calendar</h2>
           <p className="text-sm text-ink-muted leading-relaxed font-sans">
-            Visualize your upcoming milestones and publication deadlines.
+            Visualize task start and due dates from the backend.
           </p>
         </div>
         
@@ -536,61 +518,49 @@ export default function CalendarView({
         </div>
       )}
 
-      {/* Mockup Context Cards row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-        {/* Week's Focus */}
         <div className="bg-[#efe9de] border border-[#e6dfd8] rounded-xl p-5 flex items-start gap-4 shadow-xs">
           <div className="p-3 bg-canvas border border-[#e1d5c5] rounded-xl text-primary shrink-0">
             <BookOpen size={18} className="text-[#8f482f]" />
           </div>
           <div className="space-y-0.5">
             <span className="text-[9px] font-mono uppercase text-ink-muted tracking-widest font-bold block">
-              Week's Focus
+              Plans
             </span>
             <h4 className="font-serif text-sm font-bold text-ink leading-snug">
-              Anthology Wrap-up
+              {appState.dashboardSummary?.totalPlans ?? appState.plans.length}
             </h4>
             <p className="text-[10px] text-ink-muted font-mono uppercase">
-              Editorial Goal
+              Total plans
             </p>
           </div>
         </div>
 
-        {/* AI Suggestions */}
         <div className="bg-[#efe9de] border border-[#e6dfd8] rounded-xl p-5 flex items-start gap-4 shadow-xs">
           <div className="p-3 bg-canvas border border-[#e1d5c5] rounded-xl text-[#005f56] shrink-0">
             <Sparkles size={18} className="text-[#008f7a]" />
           </div>
           <div className="space-y-0.5">
             <span className="text-[9px] font-mono uppercase text-ink-muted tracking-widest font-bold block">
-              AI Suggestions
+              In Progress
             </span>
             <p className="text-xs text-ink leading-relaxed font-sans italic pt-0.5">
-              "Schedule a brief check-in for 'Final Polish' on Thursday morning."
+              {appState.dashboardSummary?.inProgressTasks ?? appState.tasks.filter(task => task.status === 'In Progress').length} tasks
             </p>
           </div>
         </div>
 
-        {/* Upcoming Deadlines */}
         <div className="bg-[#efe9de] border border-[#e6dfd8] rounded-xl p-5 flex items-start gap-4 shadow-xs">
           <div className="p-3 bg-canvas border border-[#e1d5c5] rounded-xl text-primary shrink-0">
             <Calendar size={18} className="text-[#8f482f]" />
           </div>
           <div className="space-y-1 flex-1">
             <span className="text-[9px] font-mono uppercase text-ink-muted tracking-widest font-bold block">
-              Upcoming Deadlines
+              Completed
             </span>
-            <div className="flex justify-between items-baseline pt-0.5">
-              <h4 className="font-serif text-sm font-semibold text-ink leading-snug">
-                Anthology Release
-              </h4>
-              <span className="text-[9px] font-mono font-bold text-[#ad5f45]">
-                2 Days
-              </span>
-            </div>
-            <div className="w-full bg-[#e6dfd8] h-1.5 rounded-full overflow-hidden border border-border-hairline/60 mt-1">
-              <div className="bg-[#ad5f45] h-full rounded-full" style={{ width: '80%' }}></div>
-            </div>
+            <h4 className="font-serif text-sm font-semibold text-ink leading-snug">
+              {appState.dashboardSummary?.completedTasks ?? appState.tasks.filter(task => task.status === 'Completed').length} tasks
+            </h4>
           </div>
         </div>
       </div>

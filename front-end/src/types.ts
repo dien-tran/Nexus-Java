@@ -1,13 +1,10 @@
 /**
- * Type declarations for Nexus Flow
+ * Type declarations for Nexus Flow frontend view models.
+ * These mirror the current backend API surface: plans, tasks, dashboard summary, and chat.
  */
 
-export interface Assignee {
-  name: string;
-  avatar: string;
-}
-
 export type TaskStatus = 'To Do' | 'In Progress' | 'Review' | 'Completed';
+export type TaskPriority = 'Urgent' | 'High' | 'Medium' | 'Low';
 
 export interface Task {
   id: string;
@@ -16,50 +13,19 @@ export interface Task {
   startDate?: string;
   dueDate: string;
   status: TaskStatus;
-  priority?: 'Urgent' | 'High' | 'Medium' | 'Low';
-  category?: string;
-  progress?: number; // e.g., 60 for 60%
-  assignees?: Assignee[];
-  pinned?: boolean;
+  priority?: TaskPriority;
   planId?: string;
-  planType?: 'story' | 'roadmap';
 }
 
-export type StoryStatus = 'Drafting' | 'In Review' | 'Completed';
+export type PlanStatus = 'Drafting' | 'In Review' | 'Completed';
 
-export interface ActiveStory {
+export interface Plan {
   id: string;
   title: string;
-  category?: string;
-  dueDate: string;
-  status: StoryStatus;
-  assigneeImages: string[];
+  status: PlanStatus;
   note?: string;
-}
-
-export interface UpcomingRelease {
-  id: string;
-  title: string;
-  category: string;
-  status: 'PUBLISHED' | 'READY' | 'DRAFTING' | 'IN REVIEW';
-  date: string;
-}
-
-export interface Milestone {
-  id: string;
-  title: string;
-  completed: boolean;
-}
-
-export interface RoadmapProject {
-  id: string;
-  title: string;
-  type: string; // e.g., "PRIMARY OBJECTIVE", "SECONDARY OBJECTIVE"
-  status: string; // e.g., "Active Exploration", "Paused"
-  deadline: string;
-  progress: number;
-  milestones: Milestone[];
-  lead?: string;
+  dueDate?: string;
+  ownerUserId?: string;
 }
 
 export interface ChatMessage {
@@ -74,10 +40,17 @@ export interface ChatMessage {
   };
 }
 
+export interface DashboardSummary {
+  totalPlans: number;
+  totalTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
+  inProgressTasks: number;
+}
+
 export interface AppState {
   tasks: Task[];
-  stories: ActiveStory[];
-  releases: UpcomingRelease[];
-  roadmaps: RoadmapProject[];
+  plans: Plan[];
   chats: ChatMessage[];
+  dashboardSummary?: DashboardSummary;
 }
