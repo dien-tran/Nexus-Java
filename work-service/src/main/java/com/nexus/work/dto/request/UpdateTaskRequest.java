@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateTaskRequest { 
+public class UpdateTaskRequest {
     String name;
     String description;
     LocalDate startDate;

@@ -1,6 +1,7 @@
 package com.nexus.work.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class PlanResponse {
     String status;
     String note;
     LocalDate dueDate;
+    List<TaskResponse> tasks;
 }
