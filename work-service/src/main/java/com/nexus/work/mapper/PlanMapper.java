@@ -16,13 +16,11 @@ public interface PlanMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "ownerUserId", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @Mapping(target = "dueDate", ignore = true)
     Plan toPlan(CreatePlanRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "ownerUserId", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @Mapping(target = "dueDate", ignore = true)
     Plan toUpdatePlan(@MappingTarget Plan plan, UpdatePlanRequest request);
 
     PlanResponse toPlanResponse(Plan plan);

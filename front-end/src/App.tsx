@@ -208,7 +208,7 @@ function MainAppContent() {
           {
             id: 'c1',
             sender: 'assistant' as const,
-            text: 'Mình có thể hỗ trợ bạn kiểm tra plan, task, deadline và thống kê công việc trong Nexus.',
+            text: 'Chào bạn, mình là Nexus AI Assistant. Mình có thể giúp bạn kiểm tra task, plan, deadline và thống kê công việc trong Nexus.',
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }
         ]

@@ -1,5 +1,7 @@
 package com.nexus.work.dto.request;
 
+import java.time.LocalDate;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,4 +18,5 @@ public class UpdatePlanRequest {
     String name;
     String status;
     String note;
+    LocalDate dueDate;
 }
