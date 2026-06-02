@@ -19,6 +19,8 @@ export default function WorkspaceView({
 }: WorkspaceViewProps) {
   const [isAddingPlan, setIsAddingPlan] = useState(false);
   const [planTitle, setPlanTitle] = useState('');
+  const [planStatus, setPlanStatus] = useState<PlanStatus>('Drafting');
+  const [planDueDate, setPlanDueDate] = useState('');
   const [planNote, setPlanNote] = useState('');
 
   const handleCreatePlan = (e: React.FormEvent) => {
@@ -27,11 +29,14 @@ export default function WorkspaceView({
 
     onAddPlan({
       title: planTitle.trim(),
-      status: 'Drafting',
+      status: planStatus,
+      dueDate: planDueDate || undefined,
       note: planNote
     });
 
     setPlanTitle('');
+    setPlanStatus('Drafting');
+    setPlanDueDate('');
     setPlanNote('');
     setIsAddingPlan(false);
   };
@@ -65,6 +70,29 @@ export default function WorkspaceView({
               onChange={(e) => setPlanTitle(e.target.value)}
               className="px-3 py-2 bg-canvas border border-border-hairline rounded-md text-xs outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-ink-muted/50"
             />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-ink-muted">Status</label>
+              <select
+                value={planStatus}
+                onChange={(e) => setPlanStatus(e.target.value as PlanStatus)}
+                className="px-3 py-2 bg-canvas border border-border-hairline rounded-md text-xs outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              >
+                <option value="Drafting">Drafting</option>
+                <option value="In Review">In Review</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-ink-muted">Due Date</label>
+              <input
+                type="date"
+                value={planDueDate}
+                onChange={(e) => setPlanDueDate(e.target.value)}
+                className="px-3 py-2 bg-canvas border border-border-hairline rounded-md text-xs outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[10px] font-mono uppercase font-bold text-ink-muted">Note</label>

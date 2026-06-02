@@ -49,7 +49,7 @@ type BackendPlan = {
 const initialChat: ChatMessage = {
   id: 'c1',
   sender: 'assistant',
-  text: 'Mình có thể hỗ trợ bạn kiểm tra plan, task, deadline và thống kê công việc trong Nexus.',
+  text: 'Chào bạn, mình là Nexus AI Assistant. Mình có thể giúp bạn kiểm tra task, plan, deadline và thống kê công việc trong Nexus.',
   timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 };
 
@@ -268,7 +268,8 @@ export async function createPlan(plan: Partial<Plan>): Promise<Plan> {
     body: JSON.stringify({
       name: plan.title,
       status: toBackendPlanStatus(plan.status),
-      note: plan.note
+      note: plan.note,
+      dueDate: plan.dueDate
     })
   });
 
@@ -281,7 +282,8 @@ export async function updatePlan(planId: string, plan: Partial<Plan>): Promise<P
     body: JSON.stringify({
       name: plan.title,
       status: toBackendPlanStatus(plan.status),
-      note: plan.note
+      note: plan.note,
+      dueDate: plan.dueDate
     })
   });
 

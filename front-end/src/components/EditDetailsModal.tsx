@@ -26,6 +26,7 @@ export default function EditDetailsModal({
 
   const [planTitle, setPlanTitle] = useState('');
   const [planStatus, setPlanStatus] = useState<PlanStatus>('Drafting');
+  const [planDueDate, setPlanDueDate] = useState('');
   const [planNote, setPlanNote] = useState('');
 
   const formatToInputDate = (dateStr: string): string => {
@@ -56,6 +57,7 @@ export default function EditDetailsModal({
       const plan = data as Plan;
       setPlanTitle(plan.title || '');
       setPlanStatus(plan.status || 'Drafting');
+      setPlanDueDate(formatToInputDate(plan.dueDate || ''));
       setPlanNote(plan.note || '');
     }
   }, [data, editType, isOpen]);
@@ -80,6 +82,7 @@ export default function EditDetailsModal({
         id: data.id,
         title: planTitle,
         status: planStatus,
+        dueDate: planDueDate || undefined,
         note: planNote
       });
     }
@@ -227,6 +230,18 @@ export default function EditDetailsModal({
                   <option value="In Review">In Review</option>
                   <option value="Completed">Completed</option>
                 </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-ink-muted uppercase tracking-wider">
+                  Due Date
+                </label>
+                <input
+                  type="date"
+                  value={planDueDate}
+                  onChange={(e) => setPlanDueDate(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-canvas border border-border-hairline rounded-lg text-ink focus:outline-hidden focus:ring-3 focus:ring-primary/15 focus:border-primary transition-all"
+                />
               </div>
 
               <div className="space-y-1">

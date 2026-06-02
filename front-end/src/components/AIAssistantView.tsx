@@ -41,17 +41,17 @@ export default function AIAssistantView({
               <Sparkles size={16} />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-medium text-ink">Editorial Companion</h3>
-              <p className="text-[10px] font-mono uppercase text-ink-muted tracking-wider">SECURE MODEL • GEMINI 3.5 FLASH</p>
+              <h3 className="font-serif text-lg font-medium text-ink">Nexus AI Assistant</h3>
+              <p className="text-[10px] font-mono uppercase text-ink-muted tracking-wider">TASK & PLAN ASSISTANT</p>
             </div>
           </div>
 
           <button
             onClick={onClearChats}
             className="p-1 px-2.5 text-xs text-ink-muted hover:text-[#8f482f] border border-border-hairline hover:bg-canvas rounded-md cursor-pointer transition-all flex items-center gap-1 font-semibold"
-            title="Clear Chat Logs"
+            title="Xóa lịch sử chat"
           >
-            <RotateCcw size={12} /> Reset
+            <RotateCcw size={12} /> Làm mới
           </button>
         </header>
 
@@ -115,7 +115,7 @@ export default function AIAssistantView({
                 AI
               </div>
               <div className="bg-surface-card border border-border-hairline p-3 rounded-xl italic text-xs text-ink-muted animate-pulse">
-                Drafting your critique...
+                Đang kiểm tra dữ liệu công việc...
               </div>
             </div>
           )}
@@ -129,7 +129,7 @@ export default function AIAssistantView({
             required
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder="Ask the editor (e.g. Write a script to count word occurrences...)"
+            placeholder="Hỏi về task, plan, deadline hoặc thống kê công việc..."
             className="flex-grow px-4 py-3 bg-canvas border border-border-hairline rounded-lg text-sm text-ink focus:outline-hidden focus:ring-3 focus:ring-primary/10 transition-all placeholder:text-ink-muted/50"
           />
           <button
@@ -137,7 +137,7 @@ export default function AIAssistantView({
             disabled={isSending}
             className="px-5 py-3 bg-[#ad5f45] hover:bg-[#8f482f] disabled:bg-indigo-300 text-white font-semibold text-sm rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0"
           >
-            Send <Send size={14} />
+            Gửi <Send size={14} />
           </button>
         </form>
       </section>
