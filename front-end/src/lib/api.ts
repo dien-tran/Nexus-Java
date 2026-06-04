@@ -1,4 +1,4 @@
-import { AppState, ChatMessage, DashboardSummary, Plan, PlanStatus, Task, TaskPriority, TaskStatus } from '../types.js';
+import { AppState, ChatMessage, DashboardSummary, DocumentFile, Plan, PlanStatus, Task, TaskPriority, TaskStatus } from '../types.js';
 
 const TOKEN_STORAGE_KEY = 'accessToken';
 const SESSION_STORAGE_KEY = 'userSession';
@@ -289,3 +289,72 @@ export async function updatePlan(planId: string, plan: Partial<Plan>): Promise<P
 
   return toUiPlan(payload);
 }
+
+export interface InitUploadResponse {
+  document: DocumentFile;
+  uploadUrl: string;
+  method: string;
+  expiresAt: string;
+}
+
+export interface DownloadUrlResponse {
+  documentId: string;
+  url: string;
+  method: string;
+  expiresAt: string;
+  contentType: string;
+  fileName: string;
+}
+
+export async function fetchDocuments(): Promise<DocumentFile[]> {
+  const res = await apiRequest<DocumentFile[] | ApiEnvelope<DocumentFile[]>>('/api/documents');
+  return unwrap(res);
+}
+
+export async function initDocumentUpload(
+  originalFilename: string,
+  contentType: string,
+  sizeBytes: number,
+  checksumSha256: string
+): Promise<InitUploadResponse> {
+  const res = await apiRequest<InitUploadResponse | ApiEnvelope<InitUploadResponse>>('/api/documents/uploads/init', {
+    method: 'POST',
+    body: JSON.stringify({ originalFilename, contentType, sizeBytes, checksumSha256 })
+  });
+  return unwrap(res);
+}
+
+export async function completeDocumentUpload(id: string): Promise<DocumentFile> {
+  const res = await apiRequest<DocumentFile | ApiEnvelope<DocumentFile>>(`/api/documents/${id}/uploads/complete`, {
+    method: 'POST'
+  });
+  return unwrap(res);
+}
+
+export async function getDocumentDownloadUrl(
+  id: string,
+  disposition: 'inline' | 'attachment' = 'inline'
+): Promise<DownloadUrlResponse> {
+  const res = await apiRequest<DownloadUrlResponse | ApiEnvelope<DownloadUrlResponse>>(`/api/documents/${id}/download-url?disposition=${disposition}`);
+  return unwrap(res);
+}
+
+export async function deleteDocument(id: string): Promise<void> {
+  await apiRequest<string | ApiEnvelope<string>>(`/api/documents/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+export async function uploadFileToR2(uploadUrl: string, file: File): Promise<void> {
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type || 'application/octet-stream'
+    },
+    body: file
+  });
+  if (!response.ok) {
+    throw new Error(`Direct R2 upload failed with status ${response.status}`);
+  }
+}
+

@@ -39,7 +39,8 @@ app.use([
   "/api/plans",
   "/api/tasks",
   "/api/dashboard",
-  "/api/chatbot"
+  "/api/chatbot",
+  "/api/documents"
 ], proxyToGateway);
 
 async function setupServer() {

@@ -54,3 +54,19 @@ export interface AppState {
   chats: ChatMessage[];
   dashboardSummary?: DashboardSummary;
 }
+
+export interface DocumentFile {
+  id: string;
+  ownerUserId?: string;
+  originalFilename: string;
+  contentType: string;
+  sizeBytes: number;
+  checksumSha256: string;
+  r2Bucket?: string;
+  r2Key?: string;
+  status: 'PENDING_UPLOAD' | 'UPLOADED' | 'PROCESSING' | 'READY' | 'FAILED' | 'DELETED';
+  chunkCount?: number;
+  errorMessage?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
