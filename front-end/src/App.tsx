@@ -13,6 +13,7 @@ import {
   Calendar,
   CheckSquare,
   Compass,
+  FileText,
   HelpCircle,
   LayoutDashboard,
   LogOut,
@@ -52,6 +53,7 @@ const AuthPages = lazy(() => import('./components/AuthPages.js'));
 const EditDetailsModal = lazy(() => import('./components/EditDetailsModal.js'));
 const PlanDetailsView = lazy(() => import('./components/PlanDetailsView.js'));
 const CalendarView = lazy(() => import('./components/CalendarView.js'));
+const DocumentsView = lazy(() => import('./components/DocumentsView.js'));
 
 function LoadingSpinner() {
   return (
@@ -416,6 +418,13 @@ function MainAppContent() {
             </button>
 
             <button
+              onClick={() => { navigate('/documents'); setIsSidebarOpen(false); }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${location.pathname.startsWith('/documents') ? 'bg-[#efe9de] text-[#8f482f] font-bold' : 'text-ink-muted hover:bg-surface-card hover:text-ink'}`}
+            >
+              <FileText size={15} /> Documents
+            </button>
+
+            <button
               onClick={() => { navigate('/calendar'); setIsSidebarOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${location.pathname.startsWith('/calendar') ? 'bg-[#efe9de] text-[#8f482f] font-bold' : 'text-ink-muted hover:bg-surface-card hover:text-ink'}`}
             >
@@ -494,6 +503,11 @@ function MainAppContent() {
                     onUpdateTaskStatus={(taskId, status) => updateTaskMutation.mutate({ taskId, body: { status } })}
                     onDeleteTask={(taskId) => deleteTaskMutation.mutate(taskId)}
                     onEditTask={(task) => triggerEditModal('task', task)}
+                  />
+                } />
+                <Route path="/documents" element={
+                  <DocumentsView
+                    userSession={userSession}
                   />
                 } />
                 <Route path="/calendar" element={
