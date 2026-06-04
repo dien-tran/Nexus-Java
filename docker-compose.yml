@@ -23,6 +23,18 @@ services:
     volumes:
       - work-mysql-data:/var/lib/mysql
 
+  document-mysql:
+    image: mysql:8.4
+    container_name: nexus-document-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123123
+      MYSQL_DATABASE: nexus_document_db
+    ports:
+      - "3309:3306"
+    volumes:
+      - document-mysql-data:/var/lib/mysql
+
   redis:
     image: redis:7.4-alpine
     container_name: nexus-redis
@@ -128,6 +140,35 @@ services:
       - redis
       - kafka
 
+  document-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.java
+      args:
+        MODULE: document-service
+    container_name: nexus-document-service
+    restart: unless-stopped
+    env_file:
+      - ./document-service/.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://document-mysql:3306/nexus_document_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123123
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      R2_ENDPOINT: ${R2_ENDPOINT:-}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY:-}
+      R2_SECRET_KEY: ${R2_SECRET_KEY:-}
+      R2_BUCKET: ${R2_BUCKET:-}
+      R2_REGION: ${R2_REGION:-auto}
+      JWT_SIGNER_KEY: ${JWT_SIGNER_KEY:-44b63ac98e12ce6ca2979e22a56fff7a7a7fea0b4c174965105f52f9d0c278ff}
+    ports:
+      - "8083:8083"
+    depends_on:
+      - discovery-server
+      - document-mysql
+      - kafka
+
   api-gateway:
     build:
       context: .
@@ -145,6 +186,7 @@ services:
       - discovery-server
       - identity-service
       - work-service
+      - document-service
       - chat-service
 
   front-end:
@@ -164,5 +206,6 @@ services:
 volumes:
   identity-mysql-data:
   work-mysql-data:
+  document-mysql-data:
   redis-data:
   kafka-data:

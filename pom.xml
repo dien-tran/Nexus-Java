@@ -22,6 +22,7 @@
         <module>api-gateway</module>
         <module>identity-service</module>
         <module>work-service</module>
+        <module>document-service</module>
     </modules>
 
     <properties>
