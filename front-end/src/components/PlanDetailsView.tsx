@@ -66,9 +66,9 @@ export default function PlanDetailsView({
         >
           <ArrowLeft size={14} /> Back to plans
         </button>
-        <span className="text-[10px] font-mono text-ink-muted uppercase bg-surface-card px-2.5 py-1 rounded border border-border-hairline">
+        {/* <span className="text-[10px] font-mono text-ink-muted uppercase bg-surface-card px-2.5 py-1 rounded border border-border-hairline">
           Plan ID: {plan.id}
-        </span>
+        </span> */}
       </div>
 
       <section className="bg-canvas border border-border-hairline rounded-2xl p-6 shadow-xs relative overflow-hidden">
@@ -80,11 +80,10 @@ export default function PlanDetailsView({
               <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
                 Plan
               </span>
-              <span className={`text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded border ${
-                plan.status === 'Completed'
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-[#efe9de] text-ink border-border-hairline'
-              }`}>
+              <span className={`text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded border ${plan.status === 'Completed'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-[#efe9de] text-ink border-border-hairline'
+                }`}>
                 {plan.status}
               </span>
             </div>
@@ -154,18 +153,16 @@ export default function PlanDetailsView({
                   <div className="flex justify-between items-start gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`text-[8px] font-mono tracking-widest font-bold uppercase px-1.5 py-0.5 rounded ${
-                          task.priority === 'Urgent' ? 'bg-red-50 text-red-700 border border-red-200' :
+                        <span className={`text-[8px] font-mono tracking-widest font-bold uppercase px-1.5 py-0.5 rounded ${task.priority === 'Urgent' ? 'bg-red-50 text-red-700 border border-red-200' :
                           task.priority === 'High' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-surface-card text-ink-muted border border-border-hairline'
-                        }`}>
+                            'bg-surface-card text-ink-muted border border-border-hairline'
+                          }`}>
                           {task.priority || 'Medium'} Priority
                         </span>
                       </div>
 
-                      <h4 className={`font-serif text-base font-semibold leading-snug pt-1 ${
-                        task.status === 'Completed' ? 'line-through text-ink-muted' : 'text-ink'
-                      }`}>
+                      <h4 className={`font-serif text-base font-semibold leading-snug pt-1 ${task.status === 'Completed' ? 'line-through text-ink-muted' : 'text-ink'
+                        }`}>
                         {task.title}
                       </h4>
                     </div>
@@ -173,12 +170,11 @@ export default function PlanDetailsView({
                     <select
                       value={task.status}
                       onChange={(e) => onUpdateTaskStatus(task.id, e.target.value as TaskStatus)}
-                      className={`text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded border outline-hidden transition-all cursor-pointer ${
-                        task.status === 'Completed' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' :
+                      className={`text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded border outline-hidden transition-all cursor-pointer ${task.status === 'Completed' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' :
                         task.status === 'Review' ? 'bg-indigo-50 text-indigo-850 border-indigo-300' :
-                        task.status === 'In Progress' ? 'bg-amber-50 text-amber-850 border-amber-300' :
-                        'bg-surface-card text-ink border-border-hairline'
-                      }`}
+                          task.status === 'In Progress' ? 'bg-amber-50 text-amber-850 border-amber-300' :
+                            'bg-surface-card text-ink border-border-hairline'
+                        }`}
                     >
                       <option value="To Do">To Do</option>
                       <option value="In Progress">In Progress</option>
@@ -226,7 +222,7 @@ export default function PlanDetailsView({
           )}
         </section>
 
-        <section className="space-y-6">
+        {/* <section className="space-y-6">
           <div className="bg-surface-card/65 border border-border-hairline rounded-2xl p-5 space-y-4">
             <h4 className="font-serif text-base font-semibold text-ink border-b border-border-hairline pb-2 inline-flex items-center gap-1.5 w-full">
               <Clipboard size={14} className="text-primary" /> Backend Fields
@@ -235,7 +231,7 @@ export default function PlanDetailsView({
               <p>This screen only uses backend plan fields: name, status, note, due date, and tasks attached by plan ID.</p>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
 
       {isAddingTask && (

@@ -226,7 +226,7 @@ export default function EditDetailsModal({
                   onChange={(e) => setPlanStatus(e.target.value as PlanStatus)}
                   className="w-full px-4 py-2.5 bg-canvas border border-border-hairline rounded-lg text-ink focus:outline-hidden focus:ring-3 focus:ring-primary/15 focus:border-primary transition-all"
                 >
-                  <option value="Drafting">Drafting</option>
+                  <option value="Draft">Draft</option>
                   <option value="In Review">In Review</option>
                   <option value="Completed">Completed</option>
                 </select>
