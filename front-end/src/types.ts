@@ -48,22 +48,6 @@ export interface DashboardSummary {
   inProgressTasks: number;
 }
 
-export interface DocumentFile {
-  id: string;
-  ownerUserId?: string;
-  originalFilename: string;
-  contentType: string;
-  sizeBytes: number;
-  checksumSha256?: string;
-  r2Bucket?: string;
-  r2Key?: string;
-  status: 'UPLOADED' | 'PROCESSING' | 'READY' | 'FAILED' | 'DELETED';
-  chunkCount?: number;
-  errorMessage?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface AppState {
   tasks: Task[];
   plans: Plan[];
