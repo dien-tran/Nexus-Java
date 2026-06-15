@@ -58,3 +58,20 @@ application-secret.*
 *.p12
 *.pfx
 *.pem
+
+# Python virtualenvs and common Python artifacts (prevent large site-packages from showing up)
+# Ignore any .venv, venv, env directories anywhere
+**/.venv/
+**/venv/
+**/env/
+# Common Python build/dist/cache files
+__pycache__/
+*.py[cod]
+*.pyd
+*.egg-info/
+pip-wheel-metadata/
+build/
+dist/
+
+# Specifically ignore ingestion-service virtualenv (seen in git status)
+ingestion-service/.venv/

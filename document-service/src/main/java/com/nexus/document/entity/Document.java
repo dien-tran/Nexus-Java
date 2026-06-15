@@ -72,6 +72,8 @@ public class Document {
     @Column(length = 1000)
     String errorMessage;
 
+    Integer chunkCount;
+
     Instant uploadUrlExpiresAt;
     Instant uploadedAt;
     Instant createdAt;

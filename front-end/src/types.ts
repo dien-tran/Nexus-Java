@@ -65,9 +65,12 @@ export interface DocumentFile {
   checksumSha256: string;
   r2Bucket?: string;
   r2Key?: string;
-  status: 'PENDING_UPLOAD' | 'UPLOADED' | 'PROCESSING' | 'READY' | 'FAILED' | 'DELETED';
+  status: 'PENDING_UPLOAD' | 'UPLOADED' | 'PROCESSING' | 'READY' | 'FAILED' | 'SKIPPED' | 'DELETED';
+  parseStatus?: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'SKIPPED' | 'FAILED';
+  indexStatus?: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'SKIPPED' | 'FAILED';
   chunkCount?: number;
   errorMessage?: string | null;
   createdAt: string;
   updatedAt: string;
+  indexedAt?: string | null;
 }

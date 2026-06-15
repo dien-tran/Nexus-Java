@@ -35,6 +35,18 @@ services:
     volumes:
       - document-mysql-data:/var/lib/mysql
 
+  ingestion-mysql:
+    image: mysql:8.4
+    container_name: nexus-ingestion-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123123
+      MYSQL_DATABASE: nexus_ingestion_db
+    ports:
+      - "3310:3306"
+    volumes:
+      - ingestion-mysql-data:/var/lib/mysql
+
   redis:
     image: redis:7.4-alpine
     container_name: nexus-redis
@@ -66,6 +78,16 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     volumes:
       - kafka-data:/var/lib/kafka/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.6
+    container_name: nexus-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
 
   chat-service:
     build:
@@ -162,12 +184,38 @@ services:
       R2_BUCKET: ${R2_BUCKET:-}
       R2_REGION: ${R2_REGION:-auto}
       JWT_SIGNER_KEY: ${JWT_SIGNER_KEY:-44b63ac98e12ce6ca2979e22a56fff7a7a7fea0b4c174965105f52f9d0c278ff}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-change-me-internal-token}
     ports:
       - "8083:8083"
     depends_on:
       - discovery-server
       - document-mysql
       - kafka
+
+  ingestion-service:
+    build:
+      context: ./ingestion-service
+    container_name: nexus-ingestion-service
+    restart: unless-stopped
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      DOCUMENT_SERVICE_BASE_URL: http://document-service:8083
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-change-me-internal-token}
+      INGESTION_MYSQL_URL: mysql+pymysql://root:123123@ingestion-mysql:3306/nexus_ingestion_db
+      QDRANT_URL: http://qdrant:6333
+      R2_ENDPOINT: ${R2_ENDPOINT:-}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY:-}
+      R2_SECRET_KEY: ${R2_SECRET_KEY:-}
+      R2_BUCKET: ${R2_BUCKET:-}
+      R2_REGION: ${R2_REGION:-auto}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
+      EMBEDDING_DIMENSION: ${EMBEDDING_DIMENSION:-1536}
+    depends_on:
+      - document-service
+      - ingestion-mysql
+      - kafka
+      - qdrant
 
   api-gateway:
     build:
@@ -207,5 +255,7 @@ volumes:
   identity-mysql-data:
   work-mysql-data:
   document-mysql-data:
+  ingestion-mysql-data:
   redis-data:
   kafka-data:
+  qdrant-data:

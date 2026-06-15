@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import com.nexus.common.event.DocumentIngestionStatusEvent;
 import com.nexus.common.event.DocumentUploadedEvent;
 import com.nexus.document.config.DocumentUploadProperties;
 import com.nexus.document.constant.DocumentStatus;
@@ -12,6 +13,7 @@ import com.nexus.document.constant.ProcessingStatus;
 import com.nexus.document.dto.request.InitDocumentUploadRequest;
 import com.nexus.document.dto.response.DocumentResponse;
 import com.nexus.document.dto.response.DownloadUrlResponse;
+import com.nexus.document.dto.response.IngestionDocumentMetadataResponse;
 import com.nexus.document.dto.response.InitDocumentUploadResponse;
 import com.nexus.document.entity.Document;
 import com.nexus.document.exception.AppException;
@@ -70,6 +72,7 @@ public class DocumentService {
         document.setStatus(DocumentStatus.PENDING_UPLOAD);
         document.setParseStatus(ProcessingStatus.PENDING);
         document.setIndexStatus(ProcessingStatus.PENDING);
+        document.setChunkCount(0);
         document.setUploadUrlExpiresAt(uploadUrl.expiresAt());
         document.setCreatedAt(now);
         document.setUpdatedAt(now);
@@ -133,9 +136,30 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
+    public IngestionDocumentMetadataResponse getIngestionMetadata(String documentId) {
+        Document document = documentRepository.findById(documentId)
+                .orElseThrow(() -> new AppException(ErrorCode.DOCUMENT_NOT_FOUND));
+
+        return IngestionDocumentMetadataResponse.builder()
+                .documentId(document.getId())
+                .ownerId(document.getOwnerId())
+                .status(document.getStatus())
+                .storageProvider(document.getStorageProvider())
+                .storageBucket(document.getStorageBucket())
+                .storageKey(document.getStorageKey())
+                .mimeType(document.getMimeType())
+                .originalFileName(document.getOriginalFileName())
+                .checksumSha256(document.getChecksumSha256())
+                .fileSize(document.getFileSize())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
     public DownloadUrlResponse getDownloadUrl(String ownerId, String documentId, String disposition) {
         Document document = getOwnedDocument(ownerId, documentId);
-        if (document.getStatus() != DocumentStatus.UPLOADED && document.getStatus() != DocumentStatus.READY) {
+        if (document.getStatus() != DocumentStatus.UPLOADED
+                && document.getStatus() != DocumentStatus.READY
+                && document.getStatus() != DocumentStatus.SKIPPED) {
             throw new AppException(ErrorCode.DOCUMENT_NOT_READY);
         }
 
@@ -165,6 +189,30 @@ public class DocumentService {
         documentRepository.save(document);
     }
 
+    @Transactional
+    public void applyIngestionStatus(DocumentIngestionStatusEvent event) {
+        Document document = documentRepository.findByIdAndOwnerId(event.getDocumentId(), event.getOwnerId())
+                .orElseThrow(() -> new AppException(ErrorCode.DOCUMENT_NOT_FOUND));
+        if (!document.getChecksumSha256().equalsIgnoreCase(event.getChecksumSha256())) {
+            throw new AppException(ErrorCode.R2_OBJECT_MISMATCH);
+        }
+        if (document.getStatus() == DocumentStatus.DELETED) {
+            return;
+        }
+
+        Instant occurredAt = event.getOccurredAt() == null ? Instant.now() : event.getOccurredAt();
+        document.setStatus(toDocumentStatus(event.getStatus()));
+        document.setParseStatus(toProcessingStatus(event.getParseStatus(), document.getParseStatus()));
+        document.setIndexStatus(toProcessingStatus(event.getIndexStatus(), document.getIndexStatus()));
+        document.setChunkCount(event.getChunkCount() == null ? document.getChunkCount() : event.getChunkCount());
+        document.setErrorMessage(trimError(event.getErrorMessage()));
+        document.setUpdatedAt(occurredAt);
+        if (document.getStatus() == DocumentStatus.READY) {
+            document.setIndexedAt(occurredAt);
+        }
+        documentRepository.save(document);
+    }
+
     private Document getOwnedDocument(String ownerId, String documentId) {
         return documentRepository.findByIdAndOwnerId(documentId, ownerId)
                 .orElseThrow(() -> new AppException(ErrorCode.DOCUMENT_NOT_FOUND));
@@ -190,11 +238,35 @@ public class DocumentService {
                 .r2Bucket(document.getStorageBucket())
                 .r2Key(document.getStorageKey())
                 .status(document.getStatus())
-                .chunkCount(0)
+                .parseStatus(document.getParseStatus())
+                .indexStatus(document.getIndexStatus())
+                .chunkCount(document.getChunkCount() == null ? 0 : document.getChunkCount())
                 .errorMessage(document.getErrorMessage())
                 .createdAt(document.getCreatedAt())
                 .updatedAt(document.getUpdatedAt())
+                .indexedAt(document.getIndexedAt())
                 .build();
+    }
+
+    private DocumentStatus toDocumentStatus(String status) {
+        if (status == null || status.isBlank()) {
+            return DocumentStatus.PROCESSING;
+        }
+        return DocumentStatus.valueOf(status.toUpperCase(Locale.ROOT));
+    }
+
+    private ProcessingStatus toProcessingStatus(String status, ProcessingStatus fallback) {
+        if (status == null || status.isBlank()) {
+            return fallback;
+        }
+        return ProcessingStatus.valueOf(status.toUpperCase(Locale.ROOT));
+    }
+
+    private String trimError(String errorMessage) {
+        if (errorMessage == null || errorMessage.isBlank()) {
+            return null;
+        }
+        return errorMessage.length() > 1000 ? errorMessage.substring(0, 1000) : errorMessage;
     }
 
     private String extensionOf(String fileName) {

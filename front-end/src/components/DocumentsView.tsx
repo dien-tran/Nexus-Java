@@ -423,6 +423,8 @@ export default function DocumentsView({ userSession }: DocumentsViewProps) {
         const ext = file.name.split('.').pop()?.toLowerCase();
         if (ext === 'pdf') mimeType = 'application/pdf';
         else if (ext === 'docx' || ext === 'doc') mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        else if (ext === 'pptx') mimeType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+        else if (ext === 'md' || ext === 'markdown') mimeType = 'text/markdown';
         else if (ext === 'jpg' || ext === 'jpeg') mimeType = 'image/jpeg';
         else if (ext === 'png') mimeType = 'image/png';
         else if (ext === 'xlsx') mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
